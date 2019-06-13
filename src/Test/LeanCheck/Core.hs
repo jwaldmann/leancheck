@@ -236,11 +236,11 @@ instance (Listable a, Listable b, Listable c) => Listable (a,b,c) where
 
 instance (Listable a, Listable b, Listable c, Listable d) =>
          Listable (a,b,c,d) where
-  tiers = productWith (\x (y,z,w) -> (x,y,z,w)) tiers tiers
+  tiers = productWith (\(x,y) (z,w) -> (x,y,z,w)) tiers tiers
 
 instance (Listable a, Listable b, Listable c, Listable d, Listable e) =>
          Listable (a,b,c,d,e) where
-  tiers = productWith (\x (y,z,w,v) -> (x,y,z,w,v)) tiers tiers
+  tiers = productWith (\(x,y) (z,w,v) -> (x,y,z,w,v)) tiers tiers
 
 -- | > tiers :: [[ [Int] ]] = [ [ [] ]
 --   >                        , [ [0] ]

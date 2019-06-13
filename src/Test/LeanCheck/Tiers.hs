@@ -456,10 +456,14 @@ setChoicesWith f ((x:xs):xss) = [[f x (xs:xss)]]
 -- >   , ...
 -- >   ]
 listsOfLength :: Int -> [[a]] -> [[[a]]]
-listsOfLength n xss = products (replicate n xss)
-
-
-
+-- listsOfLength n xss = products (replicate n xss)
+listsOfLength n xss =
+  let lols = [  [[ [] ]]
+             ,  mapT (:[]) xss
+	     ] <> do w <- [ 2 .. n ]
+	             let l = div w 2 ; r = w - l
+		     return $ productWith (<>) (lols !! l) (lols !! r)
+  in  lols !! n
 
 -- -- Showing tiers of values -- --
 
