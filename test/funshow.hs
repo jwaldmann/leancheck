@@ -54,7 +54,6 @@ tests =
     ++ "      \" \" -> \" \"\n"
     ++ "      ...\n"
 
-
   -- fully defined, finite --
   , show not
     == "\\x -> case x of\n"

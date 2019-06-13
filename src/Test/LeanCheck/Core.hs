@@ -515,7 +515,7 @@ listProductWith :: (a -> b -> c) -> [a] -> [b] -> [[c]]
 listProductWith f xs [] = []
 listProductWith f [] ys = []
 listProductWith f (x:xs) (y:ys) =
-  [ f x y ] : zip_with_cons ( map (f x) ys ) (listProductWith f xs (y:ys))
+  [ f x y ] : zip_with_cons ( map (\x -> f x y) xs ) (listProductWith f (x:xs) ys)
 
 zip_with_cons :: [a] -> [[a]] -> [[a]]
 zip_with_cons xs [] = map (:[]) xs
