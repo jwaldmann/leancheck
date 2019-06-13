@@ -56,7 +56,7 @@ module Test.LeanCheck.Utils.Operators
   , okNumNonNegative
 
   -- * multiset comparison
-  , (=~), (~|), (|~)
+  , (=~), (~|), (|~), (~~)
   )
 where
 
@@ -318,6 +318,8 @@ infixl 4 |=
 -- | list are equal up to permutation
 xs =~ ys = occurences xs == occurences ys
 
+-- | tiers are equal up to permutation
+xs ~~ ys = and $ zipWith (=~) xs ys
 
 -- | compare first n tiers, each up to permutation
 (~|) :: Ord a => [[a]] -> Int -> [[a]] -> Bool

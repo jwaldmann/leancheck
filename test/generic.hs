@@ -80,7 +80,7 @@ tests n =
   , mapT listToList tiers =| 6 |= (tiers :: [[ [Int] ]])
 
   , take 5 (tiers :: [[Bush Bool]])
-    =~ [ []
+    ~~ [ []
        , [ Leaf False, Leaf True]
        , []
        , [ Leaf False :-: Leaf False
@@ -91,7 +91,7 @@ tests n =
        , []
        ]
   , take 3 (tiers :: [[Tree Bool]])
-    =~ [ [Null]
+    ~~ [ [Null]
        , [Node Null False Null,Node Null True Null]
        , [ Node Null False (Node Null False Null) , Node (Node Null False Null) False Null
          , Node Null False (Node Null True Null)  , Node (Node Null False Null) True Null

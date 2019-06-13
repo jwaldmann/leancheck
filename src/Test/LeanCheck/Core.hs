@@ -505,11 +505,24 @@ infixr 8 ><
 --
 -- > productWith f xss yss  =  map (uncurry f) $ xss >< yss
 productWith :: (a->b->c) -> [[a]] -> [[b]] -> [[c]]
-productWith _ _ [] = []
-productWith _ [] _ = []
-productWith f (xs:xss) yss = map (xs **) yss
-                          \/ delay (productWith f xss yss)
-  where xs ** ys = [x `f` y | x <- xs, y <- ys]
+productWith f xss yss =
+  map concat $ listProductWith ( \ xs ys -> concat $ listProductWith f xs ys ) xss yss
+
+-- | anti-diagonal enumeration
+-- > listProductWith f [x0,x1..] [y0,y1..] =
+-- >   [[f x0 y0], [f x1 y0, f x0 y1], [f x2 y0, f x1 y1, f x0 y2], ..]
+listProductWith :: (a -> b -> c) -> [a] -> [b] -> [[c]]
+listProductWith f xs [] = []
+listProductWith f [] ys = []
+listProductWith f (x:xs) (y:ys) =
+  [ f x y ] : zip_with_cons ( map (f x) ys ) (listProductWith f xs (y:ys))
+
+zip_with_cons :: [a] -> [[a]] -> [[a]]
+zip_with_cons xs [] = map (:[]) xs
+zip_with_cons [] ys = ys
+zip_with_cons (x:xs) (y:ys) = (x:y) : zip_with_cons xs ys
+
+
 
 -- | 'Testable' values are functions
 --   of 'Listable' arguments that return boolean values.
