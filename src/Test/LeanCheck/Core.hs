@@ -463,15 +463,12 @@ infixr 5 +|
 
 -- | Append tiers --- sum of two tiers enumerations.
 --
--- > [xs,ys,zs,...] \/ [as,bs,cs,...]  =  [xs++as, ys++bs, zs++cs, ...]
+-- > [xs,ys,zs,...] \/ [as,bs,cs,...]  =  [xs+|as, ys+|bs, zs+|cs, ...]
 (\/) :: [[a]] -> [[a]] -> [[a]]
-xss \/ []  = xss
-[]  \/ yss = yss
-(xs:xss) \/ (ys:yss) = (xs ++ ys) : xss \/ yss
+(\/) = (\\//)
 infixr 7 \/
 
 -- | Interleave tiers --- sum of two tiers enumerations.
---   When in doubt, use '\/' instead.
 --
 -- > [xs,ys,zs,...] \/ [as,bs,cs,...]  =  [xs+|as, ys+|bs, zs+|cs, ...]
 (\\//) :: [[a]] -> [[a]] -> [[a]]
