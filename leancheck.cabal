@@ -11,7 +11,7 @@
 -- this cabal file too complicated.  -- Rudy
 
 name:                leancheck
-version:             0.9.1
+version:             0.9.1.1
 synopsis:            Enumerative property-based testing
 description:
   LeanCheck is a simple enumerative property-based testing library.
