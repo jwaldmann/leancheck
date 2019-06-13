@@ -39,8 +39,8 @@ instance (Listable a, Listable b)
 -- recursive datatypes
 data Peano = Zero | Succ Peano deriving (Show, Generic)
 data List a = a :- List a | Nil deriving (Show, Generic)
-data Bush a = Bush a :-: Bush a | Leaf a deriving (Show, Eq, Generic)
-data Tree a = Node (Tree a) a (Tree a) | Null deriving (Show, Eq, Generic)
+data Bush a = Bush a :-: Bush a | Leaf a deriving (Show, Eq, Ord, Generic)
+data Tree a = Node (Tree a) a (Tree a) | Null deriving (Show, Eq, Ord, Generic)
 
 instance Listable Peano where tiers = genericTiers
 instance Listable a => Listable (List a) where tiers = genericTiers
@@ -79,22 +79,25 @@ tests n =
   , mapT listToList tiers =| 6 |= (tiers :: [[ [Bool] ]])
   , mapT listToList tiers =| 6 |= (tiers :: [[ [Int] ]])
 
-  , take 6 (list :: [Bush Bool])
-    == [ Leaf False
-       , Leaf True
-       , Leaf False :-: Leaf False
-       , Leaf False :-: Leaf True
-       , Leaf True :-: Leaf False
-       , Leaf True :-: Leaf True
+  , take 5 (tiers :: [[Bush Bool]])
+    =~ [ []
+       , [ Leaf False, Leaf True]
+       , []
+       , [ Leaf False :-: Leaf False
+         , Leaf False :-: Leaf True
+         , Leaf True :-: Leaf False
+         , Leaf True :-: Leaf True
+	 ]
+       , []
        ]
-
-  , take 6 (list :: [Tree Bool])
-    == [ Null
-       , Node Null False Null
-       , Node Null True Null
-       , Node Null False (Node Null False Null)
-       , Node Null False (Node Null True Null)
-       , Node Null True (Node Null False Null)
+  , take 3 (tiers :: [[Tree Bool]])
+    =~ [ [Null]
+       , [Node Null False Null,Node Null True Null]
+       , [ Node Null False (Node Null False Null) , Node (Node Null False Null) False Null
+         , Node Null False (Node Null True Null)  , Node (Node Null False Null) True Null
+         , Node Null True (Node Null False Null)  , Node (Node Null True Null) False Null
+         , Node Null True (Node Null True Null)   , Node (Node Null True Null) True Null
+         ]
        ]
 
   , (tiers :: [[ Bool       ]]) =| 6 |= genericTiers

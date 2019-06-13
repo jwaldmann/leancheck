@@ -54,8 +54,13 @@ module Test.LeanCheck.Utils.Operators
   , okEqOrd
   , okNum
   , okNumNonNegative
+
+  -- * multiset comparison
+  , (=~), (~|), (|~)
   )
 where
+
+import qualified Data.Map as M
 
 -- TODO: Add examples in the haddock documentation of most functions in this
 --       module.
@@ -289,6 +294,10 @@ infixl 4 =$
 ($=) = ($)
 infixl 4 $=
 
+occurences :: Ord k => [k] -> M.Map k Int
+occurences xs = M.fromListWith (+) $ zip xs $ repeat 1
+
+
 -- | Check if two lists are equal for @n@ values.
 --   This operator has the same fixity of '=='.
 --
@@ -304,3 +313,18 @@ infixl 4 =|
 (|=) :: (a -> Bool) -> a -> Bool
 (|=) = ($)
 infixl 4 |=
+
+
+-- | list are equal up to permutation
+xs =~ ys = occurences xs == occurences ys
+
+
+-- | compare first n tiers, each up to permutation
+(~|) :: Ord a => [[a]] -> Int -> [[a]] -> Bool
+xs ~| n = xs =$ (map occurences . take n)
+infixl 4 ~|
+
+-- | See '~|'
+(|~) :: (a -> Bool) -> a -> Bool
+(|~) = ($)
+infixl 4 |~

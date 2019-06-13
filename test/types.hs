@@ -99,7 +99,6 @@ tests =
   , [minBound..maxBound :: UInt3] == unsignedRange 3
   , [minBound..maxBound :: UInt4] == unsignedRange 4
 
-
   -- abs minBound == minBound
   , fails 100 (\i -> abs i > (0::Int1))
   , fails 100 (\i -> abs i > (0::Int2))

@@ -27,8 +27,8 @@ deriveListable ''I
 -- recursive datatypes
 data Peano = Zero | Succ Peano deriving Show
 data List a = a :- List a | Nil deriving Show
-data Bush a = Bush a :-: Bush a | Leaf a deriving (Show, Eq)
-data Tree a = Node (Tree a) a (Tree a) | Null deriving (Show, Eq)
+data Bush a = Bush a :-: Bush a | Leaf a deriving (Show, Eq, Ord)
+data Tree a = Node (Tree a) a (Tree a) | Null deriving (Show, Eq, Ord)
 
 deriveListable ''Peano
 deriveListable ''List
@@ -105,22 +105,25 @@ tests n =
   , mapT listToList tiers =| 6 |= (tiers :: [[ [Bool] ]])
   , mapT listToList tiers =| 6 |= (tiers :: [[ [Int] ]])
 
-  , take 6 (list :: [Bush Bool])
-    == [ Leaf False
-       , Leaf True
-       , Leaf False :-: Leaf False
-       , Leaf False :-: Leaf True
-       , Leaf True :-: Leaf False
-       , Leaf True :-: Leaf True
+  , take 5 (tiers :: [[Bush Bool]])
+    =~ [ []
+       , [ Leaf False, Leaf True]
+       , []
+       , [ Leaf False :-: Leaf False
+         , Leaf False :-: Leaf True
+         , Leaf True :-: Leaf False
+         , Leaf True :-: Leaf True
+	 ]
+       , []
        ]
-
-  , take 6 (list :: [Tree Bool])
-    == [ Null
-       , Node Null False Null
-       , Node Null True Null
-       , Node Null False (Node Null False Null)
-       , Node Null False (Node Null True Null)
-       , Node Null True (Node Null False Null)
+  , take 3 (tiers :: [[Tree Bool]])
+    =~ [ [Null]
+       , [Node Null False Null,Node Null True Null]
+       , [ Node Null False (Node Null False Null) , Node (Node Null False Null) False Null
+         , Node Null False (Node Null True Null)  , Node (Node Null False Null) True Null
+         , Node Null True (Node Null False Null)  , Node (Node Null True Null) False Null
+         , Node Null True (Node Null True Null)   , Node (Node Null True Null) True Null
+         ]
        ]
 
   , (tiers :: [[ Bool       ]]) =| 6 |= $(deriveTiers ''Bool)
